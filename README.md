@@ -6,7 +6,7 @@ A simple and responsive web application that calculates a person's age in **year
 
 ## 🚀 Live Demo
 
-👉 [Click here to try it out](https://rupeshkondi.github.io/Age-calculator/)
+👉 [Click here to try it out](https://age-calculator-rupesh.netlify.app/)
 
 ---
 
