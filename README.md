@@ -30,7 +30,7 @@ A simple and responsive web application that calculates a person's age in **year
 
 ## 📷 Screenshot
 
-![Age Calculator Screenshot](screenshot.png) <!-- Add screenshot in repo -->
+![Age Calculator Screenshot](https://github.com/Rupeshkondi/age-calculator/blob/main/Screenshot%202025-07-20%20180823.png) <!-- Add screenshot in repo -->
 
 ---
 
