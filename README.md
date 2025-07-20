@@ -42,9 +42,4 @@ cd Age-calculator
 open index.html
 ﻿# age-calculator
 
-## Usage
-Enter your Date of Birth.
 
-Click the “Calculate” button.
-
-View your age in years, months, and days.
