@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Age Calculator</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts: Orbitron for numbers, Poppins for text -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #111827; /* bg-gray-900 */
+        }
+        .font-orbitron {
+            font-family: 'Orbitron', sans-serif;
+        }
+        /* Custom gradient text */
+        .gradient-text {
+            background: linear-gradient(to right, #a855f7, #ec4899); /* purple-500 to pink-500 */
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Glassmorphism effect for cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 1.5rem; /* rounded-3xl */
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+        /* Hide the default date picker icon */
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            display: none;
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex items-center justify-center p-4">
+
+    <div class="w-full max-w-4xl mx-auto">
+        <!-- Main Title -->
+        <div class="text-center mb-8">
+            <h1 class="text-4xl md:text-5xl font-bold gradient-text mb-2">Age & Time Calculator</h1>
+            <p class="text-gray-400">Enter your birth date to reveal your journey through time.</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="glass-card p-6 md:p-8 mb-8 flex flex-col md:flex-row items-center justify-center gap-4">
+            <div class="relative w-full md:w-auto">
+                <label for="birthdate" class="absolute -top-3 left-4 bg-gray-900 px-2 text-sm text-purple-400">Your Date of Birth</label>
+                <input type="date" id="birthdate" class="w-full bg-transparent border-2 border-gray-600 rounded-xl py-3 px-4 text-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none">
+            </div>
+            <button id="calculate-btn" class="w-full md:w-auto bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-8 rounded-xl text-lg transition-all duration-300 transform hover:scale-105 shadow-lg shadow-purple-900/50">
+                <i class="fas fa-calculator mr-2"></i> Calculate
+            </button>
+        </div>
+        
+        <!-- Error Message Placeholder -->
+        <div id="error-message" class="text-center text-red-400 font-semibold mb-4 hidden"></div>
+
+        <!-- Results Section (Initially Hidden) -->
+        <div id="results-section" class="hidden">
+            
+            <!-- Age Breakdown -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                <div class="glass-card p-4 text-center">
+                    <p class="text-sm text-gray-400">Years</p>
+                    <p id="years" class="text-4xl font-orbitron gradient-text">0</p>
+                </div>
+                <div class="glass-card p-4 text-center">
+                    <p class="text-sm text-gray-400">Months</p>
+                    <p id="months" class="text-4xl font-orbitron gradient-text">0</p>
+                </div>
+                <div class="glass-card p-4 text-center">
+                    <p class="text-sm text-gray-400">Days</p>
+                    <p id="days" class="text-4xl font-orbitron gradient-text">0</p>
+                </div>
+                 <div class="glass-card p-4 text-center flex flex-col justify-center">
+                    <p id="summary" class="text-lg font-semibold text-white">Your Age</p>
+                </div>
+            </div>
+
+            <!-- Detailed Stats -->
+            <div class="glass-card p-6 md:p-8 mb-8">
+                 <h3 class="text-xl font-bold text-center mb-4">Life in Numbers</h3>
+                 <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-center">
+                    <div><p class="font-semibold text-gray-400">Total Weeks</p><p id="total-weeks" class="text-2xl font-orbitron">0</p></div>
+                    <div><p class="font-semibold text-gray-400">Total Days</p><p id="total-days" class="text-2xl font-orbitron">0</p></div>
+                    <div><p class="font-semibold text-gray-400">Total Hours</p><p id="total-hours" class="text-2xl font-orbitron">0</p></div>
+                    <div><p class="font-semibold text-gray-400">Total Minutes</p><p id="total-minutes" class="text-2xl font-orbitron">0</p></div>
+                    <div><p class="font-semibold text-gray-400">Total Seconds</p><p id="total-seconds" class="text-2xl font-orbitron">0</p></div>
+                    <div><p class="font-semibold text-gray-400">Birth Day</p><p id="birth-day-of-week" class="text-2xl font-orbitron">---</p></div>
+                 </div>
+            </div>
+
+            <!-- Countdown & Zodiac -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Next Birthday Countdown -->
+                <div class="glass-card p-6 md:p-8 text-center">
+                    <h3 class="text-xl font-bold mb-4"><i class="fas fa-birthday-cake mr-2 text-pink-400"></i>Next Birthday Countdown</h3>
+                    <div id="countdown-timer" class="grid grid-cols-4 gap-2">
+                        <div><p class="text-3xl font-orbitron" id="cd-days">0</p><p class="text-xs text-gray-400">Days</p></div>
+                        <div><p class="text-3xl font-orbitron" id="cd-hours">0</p><p class="text-xs text-gray-400">Hours</p></div>
+                        <div><p class="text-3xl font-orbitron" id="cd-minutes">0</p><p class="text-xs text-gray-400">Minutes</p></div>
+                        <div><p class="text-3xl font-orbitron" id="cd-seconds">0</p><p class="text-xs text-gray-400">Seconds</p></div>
+                    </div>
+                </div>
+
+                <!-- Zodiac Signs -->
+                <div class="glass-card p-6 md:p-8 text-center">
+                    <h3 class="text-xl font-bold mb-4"><i class="fas fa-star-of-david mr-2 text-yellow-400"></i>Your Zodiac Signs</h3>
+                    <div class="flex justify-around items-center">
+                        <div>
+                            <p id="western-zodiac-icon" class="text-4xl">?</p>
+                            <p id="western-zodiac-name" class="font-semibold">Western</p>
+                        </div>
+                        <div>
+                            <p id="chinese-zodiac-icon" class="text-4xl">?</p>
+                            <p id="chinese-zodiac-name" class="font-semibold">Chinese</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Element Selection ---
+        const birthdateInput = document.getElementById('birthdate');
+        const calculateBtn = document.getElementById('calculate-btn');
+        const errorMessage = document.getElementById('error-message');
+        const resultsSection = document.getElementById('results-section');
+        let countdownInterval;
+
+        // --- Event Listener ---
+        calculateBtn.addEventListener('click', () => {
+            const birthDateStr = birthdateInput.value;
+
+            // --- Validation ---
+            if (!birthDateStr) {
+                showError("Please select your date of birth.");
+                return;
+            }
+            const birthDate = new Date(birthDateStr);
+            const today = new Date();
+            if (birthDate > today) {
+                showError("Date of birth cannot be in the future.");
+                return;
+            }
+            
+            // Clear previous errors and intervals
+            hideError();
+            if (countdownInterval) clearInterval(countdownInterval);
+
+            // --- Calculations & UI Updates ---
+            calculateAndDisplayAll(birthDate);
+            resultsSection.classList.remove('hidden');
+        });
+        
+        function calculateAndDisplayAll(birthDate) {
+            const now = new Date();
+
+            // --- Age Breakdown (Years, Months, Days) ---
+            let years = now.getFullYear() - birthDate.getFullYear();
+            let months = now.getMonth() - birthDate.getMonth();
+            let days = now.getDate() - birthDate.getDate();
+
+            if (days < 0) {
+                months--;
+                const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                days += prevMonth.getDate();
+            }
+            if (months < 0) {
+                years--;
+                months += 12;
+            }
+            
+            document.getElementById('years').textContent = years;
+            document.getElementById('months').textContent = months;
+            document.getElementById('days').textContent = days;
+            document.getElementById('summary').textContent = `${years}y ${months}m ${days}d`;
+
+            // --- Total Time Lived ---
+            const diffInMs = now.getTime() - birthDate.getTime();
+            const diffInSecs = diffInMs / 1000;
+            const diffInMins = diffInSecs / 60;
+            const diffInHours = diffInMins / 60;
+            const diffInDays = diffInHours / 24;
+            
+            document.getElementById('total-weeks').textContent = Math.floor(diffInDays / 7).toLocaleString();
+            document.getElementById('total-days').textContent = Math.floor(diffInDays).toLocaleString();
+            
+            // Live update for granular stats
+            setInterval(() => {
+                const liveNow = new Date();
+                const liveDiffInMs = liveNow.getTime() - birthDate.getTime();
+                document.getElementById('total-hours').textContent = Math.floor(liveDiffInMs / (1000 * 60 * 60)).toLocaleString();
+                document.getElementById('total-minutes').textContent = Math.floor(liveDiffInMs / (1000 * 60)).toLocaleString();
+                document.getElementById('total-seconds').textContent = Math.floor(liveDiffInMs / 1000).toLocaleString();
+            }, 1000);
+
+
+            // --- Day of the week born ---
+            const dayNames = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            document.getElementById('birth-day-of-week').textContent = dayNames[birthDate.getDay()];
+
+            // --- Next Birthday Countdown ---
+            const birthDay = birthDate.getDate();
+            const birthMonth = birthDate.getMonth();
+            let nextBirthdayYear = now.getFullYear();
+            if (now.getMonth() > birthMonth || (now.getMonth() === birthMonth && now.getDate() > birthDay)) {
+                nextBirthdayYear++;
+            }
+            const nextBirthday = new Date(nextBirthdayYear, birthMonth, birthDay);
+
+            countdownInterval = setInterval(() => {
+                updateCountdown(nextBirthday);
+            }, 1000);
+            updateCountdown(nextBirthday); // Initial call
+
+            // --- Zodiac Signs ---
+            displayZodiacs(birthDate);
+        }
+
+        function updateCountdown(targetDate) {
+            const now = new Date();
+            const diff = targetDate.getTime() - now.getTime();
+
+            if (diff <= 0) { // If it's the birthday today
+                document.getElementById('cd-days').textContent = '🎉';
+                document.getElementById('cd-hours').textContent = 'H';
+                document.getElementById('cd-minutes').textContent = 'B';
+                document.getElementById('cd-seconds').textContent = 'D';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('cd-days').textContent = days;
+            document.getElementById('cd-hours').textContent = hours;
+            document.getElementById('cd-minutes').textContent = minutes;
+            document.getElementById('cd-seconds').textContent = seconds;
+        }
+
+        function displayZodiacs(date) {
+            // --- Western Zodiac ---
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const signs = [
+                { name: "Capricorn", emoji: "♑", start: [12, 22], end: [1, 19] },
+                { name: "Aquarius", emoji: "♒", start: [1, 20], end: [2, 18] },
+                { name: "Pisces", emoji: "♓", start: [2, 19], end: [3, 20] },
+                { name: "Aries", emoji: "♈", start: [3, 21], end: [4, 19] },
+                { name: "Taurus", emoji: "♉", start: [4, 20], end: [5, 20] },
+                { name: "Gemini", emoji: "♊", start: [5, 21], end: [6, 20] },
+                { name: "Cancer", emoji: "♋", start: [6, 21], end: [7, 22] },
+                { name: "Leo", emoji: "♌", start: [7, 23], end: [8, 22] },
+                { name: "Virgo", emoji: "♍", start: [8, 23], end: [9, 22] },
+                { name: "Libra", emoji: "♎", start: [9, 23], end: [10, 22] },
+                { name: "Scorpio", emoji: "♏", start: [10, 23], end: [11, 21] },
+                { name: "Sagittarius", emoji: "♐", start: [11, 22], end: [12, 21] },
+            ];
+            let westernSign = signs.find(sign => 
+                (month === sign.start[0] && day >= sign.start[1]) || 
+                (month === sign.end[0] && day <= sign.end[1])
+            );
+            if (month === 12 && day >= 22) westernSign = signs[0]; // Capricorn edge case
+            
+            document.getElementById('western-zodiac-icon').textContent = westernSign.emoji;
+            document.getElementById('western-zodiac-name').textContent = westernSign.name;
+
+            // --- Chinese Zodiac ---
+            const year = date.getFullYear();
+            const chineseSigns = [
+                { name: "Rat", emoji: "🐀" }, { name: "Ox", emoji: "🐂" }, { name: "Tiger", emoji: "🐅" },
+                { name: "Rabbit", emoji: "🐇" }, { name: "Dragon", emoji: "🐉" }, { name: "Snake", emoji: "🐍" },
+                { name: "Horse", emoji: "🐎" }, { name: "Goat", emoji: "🐐" }, { name: "Monkey", emoji: "🐒" },
+                { name: "Rooster", emoji: "🐓" }, { name: "Dog", emoji: "🐕" }, { name: "Pig", emoji: "🐖" }
+            ];
+            const chineseSign = chineseSigns[(year - 4) % 12];
+            document.getElementById('chinese-zodiac-icon').textContent = chineseSign.emoji;
+            document.getElementById('chinese-zodiac-name').textContent = chineseSign.name;
+        }
+
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        function hideError() {
+            errorMessage.classList.add('hidden');
+        }
+
+    </script>
+</body>
+</html>
